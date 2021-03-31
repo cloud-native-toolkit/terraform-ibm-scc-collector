@@ -1,14 +1,11 @@
-name: ""
+name: "scc-collector"
 type: terraform
-description: ""
+description: "scc collector agent setup"
 tags:
-    - tools
-    - devops
+    - security
 versions:
 - platforms:
-    - kubernetes
-    - ocp3
-    - ocp4
+    - vpc
   dependencies: []
 #    - id: cluster
 #      refs:
