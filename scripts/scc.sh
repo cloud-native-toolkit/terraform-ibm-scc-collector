@@ -16,7 +16,7 @@ echo "Downloading SCC installer"
 
 # Install the collector
 export controller="https://private.asap.compliance.cloud.ibm.com"
-curl -Lo scc-installer.sh ${controller}/internal/v1/collector/scripts/get-installer
+curl -Lo scc-installer.sh $controller/internal/v1/collector/scripts/get-installer
 chmod +x scc-installer.sh
 
 echo "**********"
