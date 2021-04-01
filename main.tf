@@ -73,8 +73,9 @@ resource "ibm_is_instance" "vsi" {
 }
 
 resource "ibm_is_floating_ip" "vsi_floatingip" {
-  name   = "${local.name_prefix}-fip"
-  target = ibm_is_instance.vsi.primary_network_interface.0.id
+  name           = "${local.name_prefix}-vsi-fip"
+  target         = ibm_is_instance.vsi.primary_network_interface.0.id
+  resource_group = data.ibm_resource_group.resource_group.id
 }
   
 # Setup scc
