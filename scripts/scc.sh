@@ -29,4 +29,4 @@ echo "SCC installer help"
 
 echo "**********"
 
-./scc-installer.sh --regcode ${scc_registration_key} --interface null --mount-volume /root/scc
+./scc-installer.sh -k ${scc_registration_key} -e null -m /root/scc
