@@ -11,6 +11,22 @@ mkdir /root/scc
 # install docker compose
 apt-get install -y docker-compose
 
+echo "**********"
+echo "Downloading SCC installer"
+
 # Install the collector
 export controller="https://private.asap.compliance.cloud.ibm.com"
-bash <(curl $controller/internal/v1/collector/scripts/get-installer) --regcode ${scc_registration_key} --interface null --mount-volume /root/scc
+curl -Lo scc-installer.sh ${controller}/internal/v1/collector/scripts/get-installer
+chmod +x scc-installer.sh
+
+echo "**********"
+echo "SCC installer logic"
+cat scc-installer.sh
+
+echo "**********"
+echo "SCC installer help"
+./scc-installer.sh --help
+
+echo "**********"
+
+./scc-installer.sh --regcode ${scc_registration_key} --interface null --mount-volume /root/scc
