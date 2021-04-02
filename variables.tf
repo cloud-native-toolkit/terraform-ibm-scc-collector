@@ -1,6 +1,7 @@
 
 variable "resource_group_name" {
   type        = string
+  default     = "sivasaivm-rg-lab"
   description = "Name of Resource Group in which to provision the VSI. "
 }
 
