@@ -38,7 +38,7 @@ variable "ssh_key_id" {
 
 variable "ssh_private_key" {
   type        = string
-  description = "Location of file with private ssh key.  This is used to remote-exec to the VSI after it is created, and install the SCC Collector"
+  description = "The value of the private key that matches the ssh_key_id."
 }
 
 variable "scc_registration_key" {
