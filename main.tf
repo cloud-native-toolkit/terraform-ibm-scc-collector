@@ -86,7 +86,7 @@ resource "null_resource" "setup_scc" {
     type        = "ssh"
     user        = "root"
     password    = ""
-    private_key = file("${var.ssh_private_key}")
+    private_key = var.ssh_private_key
     host        = ibm_is_floating_ip.vsi_floatingip.address
   }
 
