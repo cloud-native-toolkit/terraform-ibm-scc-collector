@@ -29,6 +29,7 @@ variable "cluster_name" {
 variable "cluster_type" {
   type        = string
   description = "The type of cluster that should be created (openshift or kubernetes)"
+  default     = "ocp4"
 }
 
 variable "cluster_exists" {
@@ -40,11 +41,16 @@ variable "cluster_exists" {
 variable "name_prefix" {
   type        = string
   description = "Prefix name that should be used for the cluster and services. If not provided then resource_group_name will be used"
-  default     = ""
+  default     = "garage-devops"
 }
 
 variable "vpc_cluster" {
   type        = bool
   description = "Flag indicating that this is a vpc cluster"
   default     = false
+}
+
+variable "scc_registration_key" {
+  type        = string
+  description = "The registration key generated for the SCC collector. The value can be created/retrieved here - https://cloud.ibm.com/security-compliance/settings?tab=collectors"
 }
