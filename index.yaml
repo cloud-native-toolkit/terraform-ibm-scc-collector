@@ -1,0 +1,64 @@
+id: github.com/cloud-native-toolkit/terraform-ibm-scc-collector
+name: "scc-collector"
+type: terraform
+description: "scc collector agent setup"
+tags:
+  - security
+versions:
+  - platforms:
+      - vpc
+    dependencies: []
+    #    - id: cluster
+    #      refs:
+    #        - source: github.com/ibm-garage-cloud/terraform-ibm-container-platform
+    #          version: ">= 1.7.0"
+    #        - source: github.com/ibm-garage-cloud/terraform-k8s-ocp-cluster
+    #          version: ">= 2.0.0"
+    #    - id: namespace
+    #      refs:
+    #        - source: github.com/ibm-garage-cloud/terraform-k8s-namespace
+    #          version: ">= 2.1.0"
+    #    - id: dashboard
+    #      refs:
+    #        - source: github.com/ibm-garage-cloud/terraform-k8s-dashboard
+    #          version: ">= 1.6.0"
+    variables: [{name: resource_group_name, type: string, description: 'Name of Resource Group in which to provision the VSI. '}, {name: region, type: string, description: Region.  Must be same Region as the VPC}, {name: zone, type: string, description: Zone in which to provision the VSI.  Must be in the same Region as the VPC., default: description = Zone in which to provision the VSI.  Must be in the same Region as the VPC., optional: true}, {name: ibmcloud_api_key, type: string, description: The IBM Cloud api key used to provision the IBM Cloud resources}, {name: vpc_id, type: string, description: ID of VPC into which to provision the VSI.  A subnet will also be created.}, {name: name_prefix, type: string, description: Prefix used to name all resources., default: description = Prefix used to name all resources., optional: true}, {name: ssh_key_id, type: string, description: ID of SSH Key already provisioned in the region.  This will be used to access the VSI.}, {name: ssh_private_key, type: string, description: The value of the private key that matches the ssh_key_id.}, {name: scc_registration_key, type: string, description: 'The registration key generated for the SCC collector. The value can be created/retrieved here - https://cloud.ibm.com/security-compliance/settings?tab=collectors'}]
+    version: v1.0.0
+    outputs:
+      - name: vsi_private_ip
+        description: output "vsi_private_ip" {   value = ibm_is_instance.vsi.primary_network_interface.0.primary_ipv4_address }
+      - name: vsi_floating_ip
+        description: output "vsi_floating_ip" {   value = ibm_is_floating_ip.vsi_floatingip.address }
+      - name: vsi_subnet
+        description: output "vsi_subnet" {   value = ibm_is_subnet.subnet_vsi.ipv4_cidr_block }
+      - name: vsi_security_group_id
+        description: output "vsi_security_group_id" {   value = ibm_is_security_group.vsi_sg.id }
+      - name: vsi_ssh_inboud_rule_id
+        description: output "vsi_ssh_inboud_rule_id" {   value = split(".", ibm_is_security_group_rule.rule-ssh-inbound.id)[1] }
+      - name: DISABLE_SSH
+        description: output "DISABLE_SSH" {   value = "nCommand to remove rule that allows inbound ssh:n ibmcloud is security-group-rule-delete ${ibm_is_security_group.vsi_sg.id} ${split(".", ibm_is_security_group_rule.rule-ssh-inbound.id)[1]}n" }
+#    - name: cluster_type
+#      moduleRef:
+#        id: cluster
+#        output: type_code
+#    - name: cluster_ingress_hostname
+#      moduleRef:
+#        id: cluster
+#        output: ingress_hostname
+#    - name: cluster_config_file
+#      moduleRef:
+#        id: cluster
+#        output: config_file_path
+#    - name: tls_secret_name
+#      moduleRef:
+#        id: cluster
+#        output: tls_secret_name
+#    - name: releases_namespace
+#      moduleRef:
+#        id: namespace
+#        output: name
+#        discriminator: tools
+#    - name: icon_url
+#      moduleRef:
+#        id: dashboard
+#        output: base_icon_url
