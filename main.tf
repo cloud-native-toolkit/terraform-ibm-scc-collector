@@ -7,7 +7,15 @@ locals {
   name_prefix = var.name_prefix != "" ? var.name_prefix : var.resource_group_name
 }
 
+resource null_resource print_values {
+  provisioner "local-exec" {
+    command = "echo 'Resource group: ${var.resource_group_name}'"
+  }
+}
+
 data ibm_resource_group resource_group {
+  depends_on = [null_resource.print_values]
+
   name = var.resource_group_name
 }
 
