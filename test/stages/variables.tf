@@ -52,6 +52,5 @@ variable "vpc_cluster" {
 
 variable "scc_registration_key" {
   type        = string
-  description = ""
-  default     = ""
+  description = "The registration key generated for the SCC collector. The value can be created/retrieved here - https://cloud.ibm.com/security-compliance/settings?tab=collectors"
 }

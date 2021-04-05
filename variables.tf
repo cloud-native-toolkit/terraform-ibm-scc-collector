@@ -43,5 +43,5 @@ variable "ssh_private_key" {
 
 variable "scc_registration_key" {
   type        = string
-  description = "SCC Registration Key."
+  description = "The registration key generated for the SCC collector. The value can be created/retrieved here - https://cloud.ibm.com/security-compliance/settings?tab=collectors"
 }
