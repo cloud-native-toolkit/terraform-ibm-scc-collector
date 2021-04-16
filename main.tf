@@ -50,17 +50,17 @@ resource "ibm_is_security_group_rule" "rule-ssh-inbound" {
 resource "ibm_is_instance" "vsi" {
   count = var.vpc_subnet_count
 
-  name           = "${var.vpc_name}-vsi"
+  name           = "${var.vpc_name}-scc${count.index + 1}"
   resource_group = local.resource_group_id
   profile        = "cx2-2x4"
   image          = data.ibm_is_image.ubuntu_image.id
-  vpc            = var.vpc_id
+  vpc            = data.ibm_is_vpc.vpc.id
   keys           = [var.ssh_key_id]
-  zone           = local.zone
+  zone           = var.vpc_subnets[count.index].zone
   user_data      = local.user_data_vsi
 
   primary_network_interface {
-    subnet          = ibm_is_subnet.subnet_vsi.id
+    subnet          = var.vpc_subnets[count.index].id
     security_groups = [ibm_is_security_group.vsi_sg.id]
   }
 
@@ -73,13 +73,16 @@ resource "ibm_is_instance" "vsi" {
 }
 
 resource "ibm_is_floating_ip" "vsi_floatingip" {
-  name           = "${local.name_prefix}-vsi-fip"
-  target         = ibm_is_instance.vsi.primary_network_interface.0.id
-  resource_group = data.ibm_resource_group.resource_group.id
+  count = var.vpc_subnet_count
+
+  name           = "${var.vpc_name}-scc${count.index + 1}-fip"
+  target         = ibm_is_instance.vsi[count.index].primary_network_interface[0].id
+  resource_group = var.resource_group_id
 }
   
 # Setup scc
 resource "null_resource" "setup_scc" {
+  count = var.vpc_subnet_count
   depends_on = [ibm_is_floating_ip.vsi_floatingip]
 
   connection {
@@ -87,9 +90,8 @@ resource "null_resource" "setup_scc" {
     user        = "root"
     password    = ""
     private_key = var.ssh_private_key
-    host        = ibm_is_floating_ip.vsi_floatingip.address
+    host        = ibm_is_floating_ip.vsi_floatingip[count.index].address
   }
-
   
   provisioner "remote-exec" {
     inline     = [
