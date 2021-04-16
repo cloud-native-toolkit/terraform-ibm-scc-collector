@@ -1,5 +1,5 @@
 
-variable "resource_group_name" {
+variable "resource_group_id" {
   type        = string
   description = "Name of Resource Group in which to provision the VSI. "
 }
@@ -9,26 +9,28 @@ variable "region" {
   description = "Region.  Must be same Region as the VPC"
 }
 
-variable "zone" {
-   type        = string
-   default     = ""
-   description = "Zone in which to provision the VSI.  Must be in the same Region as the VPC."
-}
-
 variable "ibmcloud_api_key" {
   type        = string
   description = "The IBM Cloud api key used to provision the IBM Cloud resources"
 }
 
-variable "vpc_id" {
+variable "vpc_name" {
   type        = string
-  description = "ID of VPC into which to provision the VSI.  A subnet will also be created."
+  description = "Name of VPC into which to provision the VSI"
 }
 
-variable "name_prefix" {
-  type        = string
-  default     = ""
-  description = "Prefix used to name all resources."
+variable "vpc_subnet_count" {
+  type        = number
+  description = "Number of vpc subnets"
+}
+
+variable "vpc_subnets" {
+  type        = list(object({
+    label = string
+    id    = string
+    zone  = string
+  }))
+  description = "List of subnets with labels"
 }
 
 variable "ssh_key_id" {
