@@ -1,13 +1,9 @@
-output "vsi_private_ip" {
-  value = ibm_is_instance.vsi.primary_network_interface.0.primary_ipv4_address
+output "vsi_private_ips" {
+  value = ibm_is_instance.vsi[*].primary_network_interface[0].primary_ipv4_address
 }
 
-output "vsi_floating_ip" {
-  value = ibm_is_floating_ip.vsi_floatingip.address
-}
-
-output "vsi_subnet" {
-  value = ibm_is_subnet.subnet_vsi.ipv4_cidr_block
+output "vsi_floating_ips" {
+  value = ibm_is_floating_ip.vsi_floatingip[*].address
 }
 
 output "vsi_security_group_id" {
