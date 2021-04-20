@@ -1,10 +1,14 @@
 #!/bin/bash
 
+echo "**********"
+echo "Waiting for boot to finish"
 until [[ -f /var/lib/cloud/instance/boot-finished ]]; do
-  sleep 1
+  sleep 10
 done
 
 # make data directory
+echo "**********"
+echo "Waiting 60 seconds for the environment to settle"
 sleep 60
 mkdir /root/scc
 
@@ -28,6 +32,6 @@ echo "SCC installer help"
 ./scc-installer.sh --help
 
 echo "**********"
-echo "Running: ./scc-installer.sh -k ${scc_registration_key} -e 'null' -m /root/scc -p ''"
+echo "Running: ./scc-installer.sh -k ${scc_registration_key} -e 'null' -m /root/scc -p '' < 'n'"
 
-./scc-installer.sh -k ${scc_registration_key} -e 'null' -m /root/scc -p ""
+./scc-installer.sh -k ${scc_registration_key} -e 'null' -m /root/scc -p "" < "n"
