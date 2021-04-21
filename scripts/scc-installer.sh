@@ -168,6 +168,8 @@ services:
       - /var/run/docker.sock:${WatchVolume}
 EOF
 
+echo "******* Yaml config"
+cat ${yamlconf}
 
 docker-compose -f ${yamlconf} up -d
 
