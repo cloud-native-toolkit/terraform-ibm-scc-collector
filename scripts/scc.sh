@@ -31,7 +31,9 @@ echo "**********"
 echo "SCC installer help"
 ./scc-installer.sh --help
 
-echo "**********"
-echo "Running: ./scc-installer.sh -k ${scc_registration_key} -e 'null' -m /root/scc -p '' < 'n'"
+delete proxy_required
 
-./scc-installer.sh -k ${scc_registration_key} -e 'null' -m /root/scc -p "" < "n"
+echo "**********"
+echo "Running: ./scc-installer.sh -k ${scc_registration_key} -e 'null' -m /root/scc"
+
+./scc-installer.sh -k ${scc_registration_key} -e 'null' -m /root/scc

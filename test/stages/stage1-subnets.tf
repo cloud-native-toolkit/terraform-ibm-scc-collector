@@ -7,6 +7,6 @@ module "subnets" {
   vpc_name          = module.vpc.name
   acl_id            = module.vpc.acl_id
   gateways          = module.gateways.gateways
-  _count            = 2
+  _count            = 1
   label             = "scc"
 }
