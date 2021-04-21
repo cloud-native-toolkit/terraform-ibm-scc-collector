@@ -256,22 +256,6 @@ case $yn in
 esac
 fi
 
-if [[ "$controller" == *"private"* ]]; then
-  if [[ -z "$proxy_required" ]]; then
-    printf "${BLUEFONT}${WHITEBG} Do you wish to add proxy (y/n)${NC}? "
-    read yn
-    proxy_required=$yn
-    case $yn in
-      y ) printf "${BLUEFONT}${WHITEBG} Enter proxy ipaddress to be used${NC}:"; read proxy_ip ;
-          printf "${BLUEFONT}${WHITEBG} Enter the port of proxy server${NC}:"; read proxy_port ;
-          printf "${BLUEFONT}${WHITEBG} Enter the proxy username${NC}:"; read proxy_username ;
-          printf "${BLUEFONT}${WHITEBG} Enter the proxy password${NC}:"; read -s proxy_password ;
-          printf "${BLUEFONT}${WHITEBG}\n";;
-      n ) proxy_required="n";;
-    esac
-  fi
-fi
-
 # see if name and regcode are already present in the Volume.
 confdir=${volume}/config
 mkdir -p ${confdir}

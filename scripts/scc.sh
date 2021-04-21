@@ -20,20 +20,16 @@ echo "Downloading SCC installer"
 
 # Install the collector
 export controller="https://private.asap.compliance.cloud.ibm.com"
-curl -Lo scc-installer.sh $controller/internal/v1/collector/scripts/get-installer
-chmod +x scc-installer.sh
 
 echo "**********"
 echo "SCC installer logic"
-cat scc-installer.sh
+cat /tmp/scc-installer.sh
 
 echo "**********"
 echo "SCC installer help"
-./scc-installer.sh --help
-
-unset proxy_required
+/tmp/scc-installer.sh --help
 
 echo "**********"
-echo "Running: ./scc-installer.sh -k ${scc_registration_key} -e 'null' -m /root/scc"
+echo "Running: /tmp/scc-installer.sh -k ${scc_registration_key} -e 'null' -m /root/scc"
 
-./scc-installer.sh -k ${scc_registration_key} -e 'null' -m /root/scc
+/tmp/scc-installer.sh -k ${scc_registration_key} -e 'null' -m /root/scc

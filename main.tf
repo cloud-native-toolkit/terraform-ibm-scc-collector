@@ -92,10 +92,16 @@ resource "null_resource" "setup_scc" {
     private_key = var.ssh_private_key
     host        = ibm_is_floating_ip.vsi_floatingip[count.index].address
   }
+
+  provisioner "file" {
+    source      = "${path.module}/scripts/scc-installer.sh"
+    destination = "/tmp/scc-installer.sh"
+  }
   
   provisioner "remote-exec" {
     inline     = [
-        templatefile("${path.module}/scripts/scc.sh",{scc_registration_key = var.scc_registration_key})
+      "chmod +x /tmp/scc-installer.sh",
+      templatefile("${path.module}/scripts/scc.sh",{scc_registration_key = var.scc_registration_key})
     ]
   }
 }  
