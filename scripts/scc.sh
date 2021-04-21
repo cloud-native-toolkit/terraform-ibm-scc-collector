@@ -26,11 +26,12 @@ echo "Downloading SCC installer"
 # Install the collector
 export controller="https://private.asap.compliance.cloud.ibm.com"
 
-source /tmp/intiate_collector.sh
-
-echo "**********"
-echo "SCC installer logic"
-cat /tmp/scc-installer.sh
+repourl="private.icr.io/posture-management/compliance-collector"
+tag="0.0.1"
+watch_tower="private.icr.io/posture-management/compliance-watchtower:0.0.1"
+export IBM_REPO_URL=${repourl}
+export IBM_TAG=${tag}
+export IBM_WATCH_TOWER_IMAGE=${watch_tower}
 
 echo "**********"
 echo "SCC installer help"
