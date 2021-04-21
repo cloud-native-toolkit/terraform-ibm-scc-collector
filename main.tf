@@ -2,21 +2,19 @@ locals {
   ubuntu_image = "ibm-ubuntu-18-04-1-minimal-amd64-2"
   user_data_vsi_file = "${path.module}/config/user-data-vsi.sh"
   user_data_vsi = data.local_file.user_data_vsi.content
-  zone = var.zone != "" ? var.zone : "${var.region}-1"
-  resource_group_id = data.ibm_resource_group.resource_group.id
-  name_prefix = var.name_prefix != "" ? var.name_prefix : var.resource_group_name
+  resource_group_id = var.resource_group_id
 }
 
-resource null_resource print_values {
+resource null_resource print-names {
   provisioner "local-exec" {
-    command = "echo 'Resource group: ${var.resource_group_name}'"
+    command = "echo 'VPC name: ${var.vpc_name}'"
   }
 }
 
-data ibm_resource_group resource_group {
-  depends_on = [null_resource.print_values]
+data ibm_is_vpc vpc {
+  depends_on = [null_resource.print-names]
 
-  name = var.resource_group_name
+  name  = var.vpc_name
 }
 
 data local_file user_data_vsi {
@@ -27,17 +25,9 @@ data "ibm_is_image" "ubuntu_image" {
     name = local.ubuntu_image
 }
 
-resource "ibm_is_subnet" "subnet_vsi" {
-  name            = "${local.name_prefix}-subnet-vsi"
-  vpc             = var.vpc_id
-  resource_group  = local.resource_group_id
-  zone            = local.zone
-  total_ipv4_address_count = 32
-}
-
 resource "ibm_is_security_group" "vsi_sg" {
-    name = "${local.name_prefix}-vsi-sg"
-    vpc = var.vpc_id
+    name           = "${var.vpc_name}-sg-scc"
+    vpc            = data.ibm_is_vpc.vpc.id
     resource_group = local.resource_group_id
 }
 
@@ -58,17 +48,19 @@ resource "ibm_is_security_group_rule" "rule-ssh-inbound" {
 }
 
 resource "ibm_is_instance" "vsi" {
-  name           = "${local.name_prefix}-vsi"
+  count = var.vpc_subnet_count
+
+  name           = "${var.vpc_name}-scc${count.index + 1}"
   resource_group = local.resource_group_id
   profile        = "cx2-2x4"
   image          = data.ibm_is_image.ubuntu_image.id
-  vpc            = var.vpc_id
+  vpc            = data.ibm_is_vpc.vpc.id
   keys           = [var.ssh_key_id]
-  zone           = local.zone
+  zone           = var.vpc_subnets[count.index].zone
   user_data      = local.user_data_vsi
 
   primary_network_interface {
-    subnet          = ibm_is_subnet.subnet_vsi.id
+    subnet          = var.vpc_subnets[count.index].id
     security_groups = [ibm_is_security_group.vsi_sg.id]
   }
 
@@ -81,13 +73,16 @@ resource "ibm_is_instance" "vsi" {
 }
 
 resource "ibm_is_floating_ip" "vsi_floatingip" {
-  name           = "${local.name_prefix}-vsi-fip"
-  target         = ibm_is_instance.vsi.primary_network_interface.0.id
-  resource_group = data.ibm_resource_group.resource_group.id
+  count = var.vpc_subnet_count
+
+  name           = "${var.vpc_name}-scc${count.index + 1}-fip"
+  target         = ibm_is_instance.vsi[count.index].primary_network_interface[0].id
+  resource_group = var.resource_group_id
 }
   
 # Setup scc
 resource "null_resource" "setup_scc" {
+  count = var.vpc_subnet_count
   depends_on = [ibm_is_floating_ip.vsi_floatingip]
 
   connection {
@@ -95,13 +90,18 @@ resource "null_resource" "setup_scc" {
     user        = "root"
     password    = ""
     private_key = var.ssh_private_key
-    host        = ibm_is_floating_ip.vsi_floatingip.address
+    host        = ibm_is_floating_ip.vsi_floatingip[count.index].address
   }
 
-  
+  provisioner "file" {
+    source      = "${path.module}/scripts/"
+    destination = "/tmp"
+  }
+
   provisioner "remote-exec" {
     inline     = [
-        templatefile("${path.module}/scripts/scc.sh",{scc_registration_key = var.scc_registration_key})
+      "chmod +x /tmp/*.sh",
+      "/tmp/scc.sh ${var.scc_registration_key}"
     ]
   }
 }  
