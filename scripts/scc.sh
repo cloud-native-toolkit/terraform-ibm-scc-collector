@@ -26,6 +26,8 @@ echo "Downloading SCC installer"
 # Install the collector
 export controller="https://private.asap.compliance.cloud.ibm.com"
 
+source /tmp/intiate_collector.sh
+
 echo "**********"
 echo "SCC installer logic"
 cat /tmp/scc-installer.sh

@@ -94,13 +94,8 @@ resource "null_resource" "setup_scc" {
   }
 
   provisioner "file" {
-    source      = "${path.module}/scripts/scc.sh"
-    destination = "/tmp/scc.sh"
-  }
-
-  provisioner "file" {
-    source      = "${path.module}/scripts/scc-installer.sh"
-    destination = "/tmp/scc-installer.sh"
+    source      = "${path.module}/scripts/"
+    destination = "/tmp"
   }
 
   provisioner "remote-exec" {
