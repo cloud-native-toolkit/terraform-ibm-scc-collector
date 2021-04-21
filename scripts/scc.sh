@@ -1,5 +1,10 @@
 #!/bin/bash
 
+REGISTRATION_KEY="$1"
+if [[ -z "${REGISTRATION_KEY}" ]]; then
+  REGISTRATION_KEY=${scc_registration_key}
+fi
+
 echo "**********"
 echo "Waiting for boot to finish"
 until [[ -f /var/lib/cloud/instance/boot-finished ]]; do
@@ -30,6 +35,6 @@ echo "SCC installer help"
 /tmp/scc-installer.sh --help
 
 echo "**********"
-echo "Running: /tmp/scc-installer.sh -k ${scc_registration_key} -e 'null' -m /root/scc"
+echo "Running: /tmp/scc-installer.sh -k ${REGISTRATION_KEY} -e 'null' -m /root/scc"
 
-/tmp/scc-installer.sh -k ${scc_registration_key} -e 'null' -m /root/scc
+/tmp/scc-installer.sh -k "${REGISTRATION_KEY}" -e 'null' -m /root/scc

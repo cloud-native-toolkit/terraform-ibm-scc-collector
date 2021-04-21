@@ -94,14 +94,19 @@ resource "null_resource" "setup_scc" {
   }
 
   provisioner "file" {
+    source      = "${path.module}/scripts/scc.sh"
+    destination = "/tmp/scc.sh"
+  }
+
+  provisioner "file" {
     source      = "${path.module}/scripts/scc-installer.sh"
     destination = "/tmp/scc-installer.sh"
   }
-  
+
   provisioner "remote-exec" {
     inline     = [
-      "chmod +x /tmp/scc-installer.sh",
-      templatefile("${path.module}/scripts/scc.sh",{scc_registration_key = var.scc_registration_key})
+      "chmod +x /tmp/*.sh",
+      "/tmp/scc.sh ${var.scc_registration_key}"
     ]
   }
 }  
