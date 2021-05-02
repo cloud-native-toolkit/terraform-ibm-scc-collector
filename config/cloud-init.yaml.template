@@ -1,0 +1,22 @@
+runcmd:
+  - grep -q "ChallengeResponseAuthentication" /etc/ssh/sshd_config && sed -i "/^[#]*ChallengeResponseAuthentication[[:space:]]yes.*/c\ChallengeResponseAuthentication no" /etc/ssh/sshd_config || echo "ChallengeResponseAuthentication no" >> /etc/ssh/sshd_config
+  - grep -q "PasswordAuthentication" /etc/ssh/sshd_config && sed -i "/^[#]*PasswordAuthentication[[:space:]]yes/c\PasswordAuthentication no" /etc/ssh/sshd_config || echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+  - sed -i "s/^Include/# Include/g" /etc/ssh/sshd_config
+  - service ssh restart
+  - passwd -d root
+  - apt-get -y update
+  - apt-get -y upgrade
+  - until [[ -f /var/lib/cloud/instance/boot-finished ]]; do sleep 10; done
+  - sleep 60
+  - mkdir -p /root/scc
+  - apt-get install -y docker-compose
+  - export controller="https://private.asap.compliance.cloud.ibm.com"
+  - repourl="private.icr.io/posture-management/compliance-collector"
+  - tag="0.0.1"
+  - watch_tower="private.icr.io/posture-management/compliance-watchtower:0.0.1"
+  - export IBM_REPO_URL=$${repourl}
+  - export IBM_TAG=$${tag}
+  - export IBM_WATCH_TOWER_IMAGE=$${watch_tower}
+  - curl -Lo /tmp/scc-installer.sh https://raw.githubusercontent.com/cloud-native-toolkit/terraform-ibm-scc-collector/main/scripts/scc-installer.sh
+  - chmod +x /tmp/scc-installer.sh
+  - [/tmp/scc-installer.sh, -k, "${REGISTRATION_KEY}", -e, 'null', -m, /root/scc]
