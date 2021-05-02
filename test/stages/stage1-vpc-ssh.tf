@@ -6,4 +6,6 @@ module "vpcssh" {
   name_prefix         = var.name_prefix
   ibmcloud_api_key    = var.ibmcloud_api_key
   label               = "test-sshkey"
+  public_key          = ""
+  private_key         = ""
 }
