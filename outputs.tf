@@ -2,10 +2,6 @@ output "vsi_private_ips" {
   value = ibm_is_instance.vsi[*].primary_network_interface[0].primary_ipv4_address
 }
 
-output "vsi_floating_ips" {
-  value = ibm_is_floating_ip.vsi_floatingip[*].address
-}
-
 output "vsi_security_group_id" {
   value = ibm_is_security_group.vsi_sg.id
 }
