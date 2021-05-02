@@ -43,9 +43,9 @@ export controller="https://private.asap.compliance.cloud.ibm.com"
 repourl="private.icr.io/posture-management/compliance-collector"
 tag="0.0.1"
 watch_tower="private.icr.io/posture-management/compliance-watchtower:0.0.1"
-export IBM_REPO_URL=${repourl}
-export IBM_TAG=${tag}
-export IBM_WATCH_TOWER_IMAGE=${watch_tower}
+export IBM_REPO_URL=$${repourl}
+export IBM_TAG=$${tag}
+export IBM_WATCH_TOWER_IMAGE=$${watch_tower}
 
 curl -Lo /tmp/scc-installer.sh https://raw.githubusercontent.com/cloud-native-toolkit/terraform-ibm-scc-collector/main/scripts/scc-installer.sh
 chmod +x /tmp/scc-installer.sh
