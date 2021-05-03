@@ -91,6 +91,7 @@ resource "null_resource" "setup_scc" {
     password    = ""
     private_key = var.ssh_private_key
     host        = ibm_is_floating_ip.vsi_floatingip[count.index].address
+    timeout     = "20m"
   }
 
   provisioner "file" {
