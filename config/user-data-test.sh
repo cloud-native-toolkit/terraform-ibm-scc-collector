@@ -1,3 +1,4 @@
 #!/bin/bash
 
-echo "test value" >> /tmp/test/value
+mkdir -p /data
+echo "test value" >> /data/test.value
