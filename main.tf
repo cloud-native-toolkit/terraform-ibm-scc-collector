@@ -1,6 +1,6 @@
 locals {
   ubuntu_image       = "ibm-ubuntu-18-04-1-minimal-amd64-2"
-  user_data_vsi_file = "${path.module}/config/cloud-init.yaml.template"
+  user_data_vsi_file = "${path.module}/config/user-data-test.sh"
   user_data_vsi      = templatefile(local.user_data_vsi_file, {
     REGISTRATION_KEY = var.scc_registration_key
   })
