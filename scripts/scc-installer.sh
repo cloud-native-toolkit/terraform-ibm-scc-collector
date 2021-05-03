@@ -277,6 +277,7 @@ echo "Using host path: ${volume}"
 volume=$(abspath ${volume})
 host_address_list=${volume}/config/host_address_list.cfg
 if [ ! -f $host_address_list ]; then
+  echo "Getting ip route"
   ip route get 1 | awk '{print $NF;exit}' > $host_address_list
 fi
 
@@ -285,6 +286,7 @@ echo ${controller} > ${confdir}/controller
 image=${repo}:${tag}
 echo ${image} > ${confdir}/image
 
+echo "Updating collector"
 updatecollector
 dockercomposecreate
 setnetwork
