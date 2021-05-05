@@ -62,7 +62,7 @@ module "scc_vsi" {
   kms_key_crn       = var.kms_key_crn
   kms_enabled       = var.kms_enabled
   init_script       = file("${path.module}/config/user-data-vsi.sh")
-  create_public_ip  = true
+  create_public_ip  = false
   label             = "scc"
   allow_ssh_from    = "10.0.0.0/8"
 }
