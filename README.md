@@ -82,7 +82,7 @@ In order to register the SCC collector, do the following:
     - `scc-ssh-private-key` is the private key defined for the SCC VSI instance
     - `private-ip` is the ip address retrieved in the previous step
    
-4. Run the scc collector registration script - `scc-collector.sh ${REGISTRATION_KEY}`
+4. Run the scc collector registration script - `scc-collector.sh ${REGISTRATION_KEY}`. **Note**: answer `No` to the proxy question
 
     where: 
     - `REGISTRATION_KEY` is the value shown after the SCC collector is created
