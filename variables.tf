@@ -43,11 +43,6 @@ variable "ssh_private_key" {
   description = "The value of the private key that matches the ssh_key_id."
 }
 
-variable "scc_registration_key" {
-  type        = string
-  description = "The registration key generated for the SCC collector. The collector must be set up with a *private* endpoint. The value can be created/retrieved here - https://cloud.ibm.com/security-compliance/settings?tab=collectors"
-}
-
 variable "flow_log_cos_bucket_name" {
   type        = string
   description = "Cloud Object Storage bucket id for flow logs (optional)"
