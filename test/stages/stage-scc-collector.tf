@@ -9,5 +9,4 @@ module "scc-collector" {
   vpc_subnets          = module.subnets.subnets
   ssh_key_id           = module.vpcssh.id
   ssh_private_key      = module.vpcssh.private_key
-  scc_registration_key = var.scc_registration_key
 }
