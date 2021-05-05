@@ -44,8 +44,24 @@ module "scc_vsi" {
   label             = "scc"
   allow_ssh_from    = "10.0.0.0/8"
   security_group_rules = [{
-    name = "everything"
+    name = "http"
     direction = "outbound"
     remote = "0.0.0.0/0"
+    tcp = {
+      port_min = 80
+      port_max = 80
+    }
+  }, {
+    name = "https"
+    direction = "outbound"
+    remote = "0.0.0.0/0"
+    tcp = {
+      port_min = 443
+      port_max = 443
+    }
+  }, {
+    name = "internal"
+    direction = "outbound"
+    remote = "10.0.0.0/8"
   }]
 }
