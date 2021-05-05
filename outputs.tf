@@ -7,13 +7,5 @@ output "vsi_floating_ips" {
 }
 
 output "vsi_security_group_id" {
-  value = ibm_is_security_group.vsi_sg.id
-}
-
-output "vsi_ssh_inboud_rule_id" {
-  value = split(".", ibm_is_security_group_rule.rule-ssh-inbound.id)[1]
-}
-
-output "DISABLE_SSH" {
-  value = "\nCommand to remove rule that allows inbound ssh:\n ibmcloud is security-group-rule-delete ${ibm_is_security_group.vsi_sg.id} ${split(".", ibm_is_security_group_rule.rule-ssh-inbound.id)[1]}\n"
+  value = module.scc_vsi.security_group_id
 }
