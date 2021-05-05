@@ -47,3 +47,21 @@ variable "scc_registration_key" {
   type        = string
   description = "The registration key generated for the SCC collector. The collector must be set up with a *private* endpoint. The value can be created/retrieved here - https://cloud.ibm.com/security-compliance/settings?tab=collectors"
 }
+
+variable "flow_log_cos_bucket_name" {
+  type        = string
+  description = "Cloud Object Storage bucket id for flow logs (optional)"
+  default     = ""
+}
+
+variable "kms_enabled" {
+  type        = bool
+  description = "Flag indicating that the volumes should be encrypted using a KMS."
+  default     = false
+}
+
+variable "kms_key_crn" {
+  type        = string
+  description = "The crn of the root key in the kms instance. Required if kms_enabled is true"
+  default     = null
+}

@@ -47,62 +47,21 @@ resource "ibm_is_security_group_rule" "rule-ssh-inbound" {
     }
 }
 
-resource "ibm_is_instance" "vsi" {
-  count = var.vpc_subnet_count
+module "scc_vsi" {
+  source = "github.com/cloud-native-toolkit/terraform-ibm-vpc-vsi.git?ref=v1.1.0"
 
-  name           = "${var.vpc_name}-scc${count.index + 1}"
-  resource_group = local.resource_group_id
-  profile        = "cx2-2x4"
-  image          = data.ibm_is_image.ubuntu_image.id
-  vpc            = data.ibm_is_vpc.vpc.id
-  keys           = [var.ssh_key_id]
-  zone           = var.vpc_subnets[count.index].zone
-  user_data      = local.user_data_vsi
-
-  primary_network_interface {
-    subnet          = var.vpc_subnets[count.index].id
-    security_groups = [ibm_is_security_group.vsi_sg.id]
-  }
-
-  # Don't respin the VSI if the startup script is updated.
-  lifecycle {
-    ignore_changes = [
-      user_data
-    ]
-  }
+  resource_group_id = var.resource_group_id
+  region            = var.region
+  ibmcloud_api_key  = var.ibmcloud_api_key
+  vpc_name          = var.vpc_name
+  vpc_subnet_count  = var.vpc_subnet_count
+  vpc_subnets       = var.vpc_subnets
+  profile_name      = "cx2-2x4"
+  ssh_key_ids       = [var.ssh_key_id]
+  flow_log_cos_bucket_name = var.flow_log_cos_bucket_name
+  kms_key_crn       = var.kms_key_crn
+  kms_enabled       = var.kms_enabled
+  init_script       = file("${path.module}/config/user-data-vsi.sh")
+  create_public_ip  = true
+  allow_ssh_from    = "10.0.0.0/8"
 }
-
-resource "ibm_is_floating_ip" "vsi_floatingip" {
-  count = var.vpc_subnet_count
-
-  name           = "${var.vpc_name}-scc${count.index + 1}-fip"
-  target         = ibm_is_instance.vsi[count.index].primary_network_interface[0].id
-  resource_group = var.resource_group_id
-}
-  
-# Setup scc
-resource "null_resource" "setup_scc" {
-  count = var.vpc_subnet_count
-  depends_on = [ibm_is_floating_ip.vsi_floatingip]
-
-  connection {
-    type        = "ssh"
-    user        = "root"
-    password    = ""
-    private_key = var.ssh_private_key
-    host        = ibm_is_floating_ip.vsi_floatingip[count.index].address
-    timeout     = "20m"
-  }
-
-  provisioner "file" {
-    source      = "${path.module}/scripts/"
-    destination = "/tmp"
-  }
-
-  provisioner "remote-exec" {
-    inline     = [
-      "chmod +x /tmp/*.sh",
-      "/tmp/scc.sh ${var.scc_registration_key}"
-    ]
-  }
-}  
