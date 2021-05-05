@@ -48,7 +48,7 @@ resource "ibm_is_security_group_rule" "rule-ssh-inbound" {
 }
 
 module "scc_vsi" {
-  source = "github.com/cloud-native-toolkit/terraform-ibm-vpc-vsi.git?ref=v1.1.0"
+  source = "github.com/cloud-native-toolkit/terraform-ibm-vpc-vsi.git?ref=v1.2.0"
 
   resource_group_id = var.resource_group_id
   region            = var.region
