@@ -1,9 +1,9 @@
 output "vsi_private_ips" {
-  value = ibm_is_instance.vsi[*].primary_network_interface[0].primary_ipv4_address
+  value = module.scc_vsi.private_ips
 }
 
 output "vsi_floating_ips" {
-  value = ibm_is_floating_ip.vsi_floatingip[*].address
+  value = module.scc_vsi.public_ips
 }
 
 output "vsi_security_group_id" {
