@@ -25,28 +25,6 @@ data "ibm_is_image" "ubuntu_image" {
     name = local.ubuntu_image
 }
 
-resource "ibm_is_security_group" "vsi_sg" {
-    name           = "${var.vpc_name}-sg-scc"
-    vpc            = data.ibm_is_vpc.vpc.id
-    resource_group = local.resource_group_id
-}
-
-resource "ibm_is_security_group_rule" "rule-all-outbound" {
-    group = ibm_is_security_group.vsi_sg.id
-    direction = "outbound"
-    remote = "0.0.0.0/0"
-}
-
-resource "ibm_is_security_group_rule" "rule-ssh-inbound" {
-    group = ibm_is_security_group.vsi_sg.id
-    direction = "inbound"
-    remote = "0.0.0.0/0"
-    tcp {
-        port_min = 22
-        port_max = 22
-    }
-}
-
 module "scc_vsi" {
   source = "github.com/cloud-native-toolkit/terraform-ibm-vpc-vsi.git?ref=v1.2.0"
 
@@ -65,4 +43,10 @@ module "scc_vsi" {
   create_public_ip  = false
   label             = "scc"
   allow_ssh_from    = "10.0.0.0/8"
+}
+
+resource "ibm_is_security_group_rule" "rule-all-outbound" {
+  group = module.scc_vsi.security_group_id
+  direction = "outbound"
+  remote = "0.0.0.0/0"
 }
