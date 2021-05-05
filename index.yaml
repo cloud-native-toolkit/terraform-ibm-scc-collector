@@ -92,6 +92,100 @@ versions:
         description: The crn of the root key in the kms instance. Required if kms_enabled is true
         default: "null"
         optional: true
+    version: v1.2.1
+    outputs:
+      - name: vsi_private_ips
+        description: output "vsi_private_ips" {   value = module.scc_vsi.private_ips }
+      - name: vsi_floating_ips
+        description: output "vsi_floating_ips" {   value = module.scc_vsi.public_ips }
+      - name: vsi_security_group_id
+        description: output "vsi_security_group_id" {   value = module.scc_vsi.security_group_id }
+  - platforms:
+      - vpc
+    dependencies:
+      - id: resource_group
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-ibm-resource-group
+            version: ">= 2.1.0"
+      - id: vpc
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-ibm-vpc
+            version: ">= 1.0.0"
+      - id: subnets
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-ibm-vpc-subnets
+            version: ">= 1.0.0"
+      - id: vpcssh
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-ibm-vpc-ssh
+            version: ">= 1.0.0"
+    variables:
+      - name: resource_group_id
+        moduleRef:
+          id: resource_group
+          output: id
+        type: string
+        description: 'Name of Resource Group in which to provision the VSI. '
+      - name: region
+        scope: global
+        type: string
+        description: Region.  Must be same Region as the VPC
+      - name: ibmcloud_api_key
+        scope: global
+        type: string
+        description: The IBM Cloud api key used to provision the IBM Cloud resources
+      - name: vpc_name
+        moduleRef:
+          id: vpc
+          output: name
+        type: string
+        description: Name of VPC into which to provision the VSI
+      - name: vpc_subnet_count
+        moduleRef:
+          id: subnets
+          output: count
+        type: number
+        description: Number of vpc subnets
+      - name: vpc_subnets
+        moduleRef:
+          id: subnets
+          output: subnets
+        type: |-
+          list(object({
+              label = string
+              id    = string
+              zone  = string
+            }))
+        description: List of subnets with labels
+      - name: ssh_key_id
+        moduleRef:
+          id: vpcssh
+          output: id
+        type: string
+        description: ID of SSH Key already provisioned in the region.  This will be used to access the VSI.
+      - name: ssh_private_key
+        moduleRef:
+          id: vpcssh
+          output: private_key
+        type: string
+        description: The value of the private key that matches the ssh_key_id.
+      - name: scc_registration_key
+        scope: global
+      - name: flow_log_cos_bucket_name
+        type: string
+        description: Cloud Object Storage bucket id for flow logs (optional)
+        default: ""
+        optional: true
+      - name: kms_enabled
+        type: bool
+        description: Flag indicating that the volumes should be encrypted using a KMS.
+        default: false
+        optional: true
+      - name: kms_key_crn
+        type: string
+        description: The crn of the root key in the kms instance. Required if kms_enabled is true
+        default: "null"
+        optional: true
     version: v1.2.0
     outputs:
       - name: vsi_private_ips
