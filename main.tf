@@ -26,7 +26,7 @@ data "ibm_is_image" "ubuntu_image" {
 }
 
 module "scc_vsi" {
-  source = "github.com/cloud-native-toolkit/terraform-ibm-vpc-vsi.git?ref=v1.2.2"
+  source = "github.com/cloud-native-toolkit/terraform-ibm-vpc-vsi.git?ref=v1.3.1"
 
   resource_group_id = var.resource_group_id
   region            = var.region
