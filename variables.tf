@@ -43,12 +43,6 @@ variable "ssh_private_key" {
   description = "The value of the private key that matches the ssh_key_id."
 }
 
-variable "flow_log_cos_bucket_name" {
-  type        = string
-  description = "Cloud Object Storage bucket id for flow logs (optional)"
-  default     = ""
-}
-
 variable "kms_enabled" {
   type        = bool
   description = "Flag indicating that the volumes should be encrypted using a KMS."
@@ -60,3 +54,16 @@ variable "kms_key_crn" {
   description = "The crn of the root key in the kms instance. Required if kms_enabled is true"
   default     = null
 }
+
+variable "image_name" {
+  type        = string
+  description = "The name of the image that will be used in the Virtual Server instance"
+  default     = "ibm-ubuntu-18-04-1-minimal-amd64-2"
+}
+
+variable "init_script" {
+  type        = string
+  description = "The script used to initialize the Virtual Server instance. If not provided the default script will be used."
+  default     = ""
+}
+
