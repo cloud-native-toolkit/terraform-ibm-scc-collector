@@ -67,3 +67,8 @@ variable "init_script" {
   default     = ""
 }
 
+variable "base_security_group" {
+  type        = string
+  description = "The id of the base security group to use for the VSI instance. If not provided the default VPC security group will be used."
+  default     = null
+}
