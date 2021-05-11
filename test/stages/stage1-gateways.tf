@@ -5,4 +5,5 @@ module "gateways" {
   region            = var.region
   ibmcloud_api_key  = var.ibmcloud_api_key
   vpc_name          = module.vpc.name
+  vpc_id            = module.vpc.id
 }
