@@ -25,7 +25,7 @@ data "ibm_is_image" "ubuntu_image" {
 }
 
 module "scc_vsi" {
-  source = "github.com/cloud-native-toolkit/terraform-ibm-vpc-vsi.git?ref=v1.5.2"
+  source = "github.com/cloud-native-toolkit/terraform-ibm-vpc-vsi.git?ref=v1.6.0"
 
   resource_group_id = var.resource_group_id
   region            = var.region
@@ -41,25 +41,40 @@ module "scc_vsi" {
   create_public_ip  = false
   label             = "scc"
   allow_ssh_from    = "10.0.0.0/8"
-  security_group_rules = [{
-    name = "http"
-    direction = "outbound"
-    remote = "0.0.0.0/0"
-    tcp = {
-      port_min = 80
-      port_max = 80
+  security_group_rules = [
+    {
+      name      = "private-network"
+      direction = "outbound"
+      remote    = "10.0.0.0/8"
+    },
+    {
+      name      = "service-endpoints"
+      direction = "outbound"
+      remote    = "161.26.0.0/16"
+    },
+    {
+      name      = "iaas-endpoints"
+      direction = "outbound"
+      remote    = "166.8.0.0/14"
+    },
+    {
+      name      = "outbound-http"
+      direction = "outbound"
+      remote    = "0.0.0.0/0"
+      tcp = {
+        port_min = 80
+        port_max = 80
+      }
+    },
+    {
+      name      = "outbound-https"
+      direction = "outbound"
+      remote    = "0.0.0.0/0"
+      tcp = {
+        port_min = 443
+        port_max = 443
+      }
     }
-  }, {
-    name = "https"
-    direction = "outbound"
-    remote = "0.0.0.0/0"
-    tcp = {
-      port_min = 443
-      port_max = 443
-    }
-  }, {
-    name = "internal"
-    direction = "outbound"
-    remote = "10.0.0.0/8"
-  }]
+  ]
+  base_security_group = var.base_security_group
 }
