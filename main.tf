@@ -56,6 +56,24 @@ module "scc_vsi" {
       name      = "iaas-endpoints"
       direction = "outbound"
       remote    = "166.8.0.0/14"
+    },
+    {
+      name      = "outbound-http"
+      direction = "outbound"
+      remote    = "0.0.0.0/0"
+      tcp = {
+        port_min = 80
+        port_max = 80
+      }
+    },
+    {
+      name      = "outbound-https"
+      direction = "outbound"
+      remote    = "0.0.0.0/0"
+      tcp = {
+        port_min = 443
+        port_max = 443
+      }
     }
   ]
   base_security_group = var.base_security_group
