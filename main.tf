@@ -74,6 +74,15 @@ module "scc_vsi" {
         port_min = 443
         port_max = 443
       }
+    },
+    {
+      name      = "outbound-dns"
+      direction = "outbound"
+      remote    = "0.0.0.0/0"
+      udp = {
+        port_min = 53
+        port_max = 53
+      }
     }
   ]
   base_security_group = var.base_security_group
