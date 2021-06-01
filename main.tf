@@ -87,3 +87,17 @@ module "scc_vsi" {
   ]
   base_security_group = var.base_security_group
 }
+
+data ibm_is_subnet subnet {
+  count = var.vpc_subnet_count > 0 ? 1 : 0
+
+  identifier = var.vpc_subnets[0].id
+}
+
+resource null_resource open_acl_rules {
+  count = var.vpc_subnet_count > 0 ? 1 : 0
+
+  provisioner "local-exec" {
+    command = "${path.module}/scripts/open-acl-rules.sh ${data.ibm_is_subnet.subnet[0].network_acl}"
+  }
+}
