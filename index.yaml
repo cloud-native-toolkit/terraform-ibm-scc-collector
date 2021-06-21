@@ -1,4 +1,4 @@
-id: github.com/cloud-native-toolkit/terraform-ibm-scc-collector
+id: github.com/cloud-native-toolkit/terraform-vsi-scc-collector
 name: scc-collector
 alias: scc
 type: terraform
