@@ -1,6 +1,6 @@
 module "scc-collector" {
   source = "./module"
-
+  depends_on           = [module.subnet]
   resource_group_id    = module.resource_group.id
   region               = var.region
   ibmcloud_api_key     = var.ibmcloud_api_key
